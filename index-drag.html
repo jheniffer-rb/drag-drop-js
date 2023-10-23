@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag and Drop Jheniffer</title>
+
+  <link rel="stylesheet" type="text/css" href="index-drag.css"/>
+
+</head>
+<body>
+  <h1>Planner projeto</h1>
+  <div class="container">
+    
+    <div id="coluna-pendentes" class="colunas">
+      <h2>Tarefas pendentes (TO DO)</h2>
+      <div class="tarefa" draggable="true">Definição do problema</div>
+      <div class="tarefa" draggable="true">Elaboração do cronograma</div>
+      <div class="tarefa" draggable="true">Elaboração roteiro de entrevista</div>
+      <div class="tarefa" draggable="true">Realização da entrevista</div>
+      <div class="tarefa" draggable="true">Documento de requisitos</div>
+      <div class="tarefa" draggable="true">Estórias do usuário/Casos de uso</div>
+      <div class="tarefa" draggable="true">Diagrama de classes</div>
+      <div class="tarefa" draggable="true">Protótipo</div>
+      <div class="tarefa" draggable="true">Entrega do projeto</div>
+    </div>
+
+    <div id="coluna-andamento" class="colunas">
+      <h2>Tarefas em andamento (ON GOING)</h2>
+    </div>
+
+    <div id="coluna-concluidas" class="colunas">
+      <h2>Tarefas concluídas (DONE)</h2>
+    </div>
+
+  </div>
+
+  <script>
+      var colunas = document.querySelectorAll(".colunas");//seleciona todas as classes colunas
+
+      document.addEventListener("dragstart", (event) => 
+      {
+        if (event.target.classList.contains("tarefa")) //verifica se o elemento possui a classe tarefa
+        {
+          event.target.classList.add("arrastando");//inicio do arrastar
+        }
+
+      });
+
+      document.addEventListener("dragend", (event) => 
+      {
+        event.target.classList.remove("arrastando");//final do arrastar
+      });
+
+      colunas.forEach((item) => 
+      {
+        item.addEventListener("dragover", (event) => 
+        {
+          event.preventDefault();
+          var arrastando = document.querySelector(".arrastando");//seleciona a tarefa arrastada e armazena na variavel arrastando
+          var destino = posicao(item, event.clientY);
+
+          if (destino) 
+          {
+            destino.insertAdjacentElement("afterend", arrastando);//insere o elemento arrastado depois o elemento de destino
+          } 
+          
+          else 
+          {
+            item.appendChild(arrastando);
+          }
+        });
+
+      });
+
+      function posicao(coluna, vertical) 
+      {
+        var itens = coluna.querySelectorAll(".tarefa:not(.dragging)");//seleciona os que não foram arrastados
+        var resultado;
+        var item;
+
+        for (item of itens) 
+        {
+          var box = item.getBoundingClientRect();
+          var vert_cent = box.y + box.height / 2;
+
+          if (vertical >= vert_cent) 
+          {
+            resultado = item;
+          }
+        }
+
+        return resultado;
+      }
+  </script>
+
+</body>
+</html>
